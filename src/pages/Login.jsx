@@ -33,6 +33,11 @@ export default class Login extends Component {
     history.push('/game');
   };
 
+  handleSettings = () => {
+    const { history } = this.props;
+    history.push('/settings');
+  };
+
   render() {
     const { disabled } = this.state;
     return (
@@ -66,6 +71,14 @@ export default class Login extends Component {
             }
           >
             Play
+          </button>
+          <button
+            type="button"
+            data-testid="btn-settings"
+            onClick={ this.handleSettings }
+          >
+            Configurações
+
           </button>
         </form>
       </div>

@@ -6,7 +6,7 @@ import { submitInfo } from '../redux/actions';
 
 class Login extends Component {
   state = {
-    nome: '',
+    name: '',
     email: '',
     disabled: true,
   };
@@ -41,21 +41,22 @@ class Login extends Component {
   };
 
   render() {
+    const { user } = this.props;
     const { disabled } = this.state;
     return (
       <div>
 
         <form>
-          <label htmlFor="nome">
+          <label htmlFor="name">
             Nome:
             <input
               type="text"
               data-testid="input-player-name"
-              name="nome"
+              name="name"
               onChange={ this.handleChange }
             />
           </label>
-          <label htmlFor="nome">
+          <label htmlFor="email">
             Email:
             <input
               type="email"
@@ -68,9 +69,11 @@ class Login extends Component {
             type="button"
             data-testid="btn-play"
             disabled={ disabled }
-            onClick={
-              this.handleClick
-            }
+            onClick={ () => {
+              this.handleClick();
+              user(this.state);
+            } }
+
           >
             Play
           </button>

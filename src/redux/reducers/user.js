@@ -11,7 +11,10 @@ const reducer = (state = INITIAL_STATE, action) => {
       user: {
         name: action.payload.name,
         email: action.payload.email,
+        score: 0,
+
       },
+
     };
 
   default:

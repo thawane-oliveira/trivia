@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { func } from 'prop-types';
 import getToken from '../services/token';
+import { submitInfo } from '../redux/actions';
 
-export default class Login extends Component {
+class Login extends Component {
   state = {
     nome: '',
     email: '',
@@ -85,7 +87,12 @@ export default class Login extends Component {
     );
   }
 }
+const mapDispatchToProps = (dispatch) => ({
+  user: (state) => dispatch(submitInfo(state)),
+});
 
 Login.propTypes = {
   history: func,
 }.isRequired;
+
+export default connect(null, mapDispatchToProps)(Login);

@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { func } from 'prop-types';
+import getToken from '../services/token';
 
 export default class Login extends Component {
   state = {
@@ -22,6 +24,13 @@ export default class Login extends Component {
         disabled: false,
       });
     }
+  };
+
+  handleClick = async () => {
+    const { history } = this.props;
+    const response = await getToken();
+    localStorage.setItem('token', response);
+    history.push('/game');
   };
 
   render() {
@@ -52,6 +61,9 @@ export default class Login extends Component {
             type="button"
             data-testid="btn-play"
             disabled={ disabled }
+            onClick={
+              this.handleClick
+            }
           >
             Play
           </button>
@@ -60,3 +72,7 @@ export default class Login extends Component {
     );
   }
 }
+
+Login.propTypes = {
+  history: func,
+}.isRequired;

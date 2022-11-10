@@ -1,20 +1,21 @@
 import { SUBMIT_INFO } from '../actions';
 
 const INITIAL_STATE = {
-  user: {},
+  user: {
+    name: '',
+    email: '',
+    score: 0,
+  },
 };
 
-const reducer = (state = INITIAL_STATE, action) => {
+const user = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case SUBMIT_INFO:
     return {
-      user: {
-        name: action.payload.name,
-        email: action.payload.email,
-        score: 0,
-
-      },
-
+      ...state,
+      name: action.payload.name,
+      email: action.payload.email,
+      score: 0,
     };
 
   default:
@@ -22,4 +23,4 @@ const reducer = (state = INITIAL_STATE, action) => {
   }
 };
 
-export default reducer;
+export default user;

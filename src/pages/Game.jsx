@@ -105,7 +105,6 @@ class Game extends Component {
     return (
       <>
         <Header />
-
         {
           question && (
             <>

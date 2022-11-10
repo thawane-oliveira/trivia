@@ -11,11 +11,15 @@ class Game extends Component {
     answered: '',
     rightAnswer: '',
     randomizedAnswer: [],
+    timer: 30,
+    disabled: false,
   };
 
   async componentDidMount() {
+    this.timerCountdown();
+
     const { history } = this.props;
-    const { questionId, rightAnswer } = this.state;
+    const { questionId } = this.state;
 
     const token = localStorage.getItem('token');
     const data = await getTriviaQuestion(token);
@@ -37,8 +41,6 @@ class Game extends Component {
       randomizedAnswer: randomizedQuestions,
       rightAnswer: correct });
 
-    console.log(rightAnswer);
-
     const errNum = 3;
     if (data.results.length === 0 || data.response_code === errNum) {
       localStorage.removeItem('token');
@@ -46,8 +48,11 @@ class Game extends Component {
     }
   }
 
+  componentDidUpdate() {
+    this.timerCountdown();
+  }
+
   randomize = (questionArray) => {
-    console.log(questionArray);
     if (questionArray.length > 0) {
       const num = 0.5;
       const randomizedQuestions = questionArray.sort(() => num - Math.random());
@@ -68,19 +73,43 @@ class Game extends Component {
     this.setState({ answered: true });
   };
 
+  timerCountdown = () => {
+    const { timer, disabled } = this.state;
+    const newCount = timer - 1;
+    const ONE_SECOND = 1000;
+    if (timer > 0) {
+      setTimeout(() => this.setState({
+        timer: newCount,
+      }), ONE_SECOND);
+    }
+    if (timer === 0 && disabled === false) {
+      this.setState({
+        disabled: true,
+      });
+    }
+    return timer;
+  };
+
   render() {
-    const { randomizedAnswer, questions, questionId, rightAnswer } = this.state;
+    const {
+      randomizedAnswer,
+      questions,
+      questionId,
+      rightAnswer,
+      disabled,
+      timer,
+    } = this.state;
 
     const question = questions[questionId];
 
     return (
       <>
         <Header />
-
         {
           question && (
             <>
               <h2 data-testid="question-category">{question.category}</h2>
+              <h3>{timer}</h3>
               <p data-testid="question-text">{question.question}</p>
               <div
                 data-testid="answer-options"
@@ -95,6 +124,7 @@ class Game extends Component {
                         ? 'correct-answer'
                         : `wrong-answer-${index}`
                     }
+                    disabled={ disabled }
                     onClick={ this.handleClick }
                   >
                     {answer}

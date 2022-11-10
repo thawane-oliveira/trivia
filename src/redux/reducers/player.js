@@ -1,14 +1,15 @@
-import { SUBMIT_INFO } from '../actions';
+import { SUBMIT_INFO, SCORE_POINTS } from '../actions';
 
 const INITIAL_STATE = {
-  user: {
+  player: {
     name: '',
     email: '',
     score: 0,
+    assertions: 0,
   },
 };
 
-const user = (state = INITIAL_STATE, action) => {
+const player = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case SUBMIT_INFO:
     return {
@@ -17,10 +18,15 @@ const user = (state = INITIAL_STATE, action) => {
       email: action.payload.email,
       score: 0,
     };
+  case SCORE_POINTS:
+    return {
+      ...state,
+      score: action.value,
+    };
 
   default:
     return state;
   }
 };
 
-export default user;
+export default player;

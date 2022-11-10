@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { func } from 'prop-types';
-import getToken from '../services/token';
+import { getToken } from '../services/api';
 import { submitInfo } from '../redux/actions';
 
 class Login extends Component {
@@ -19,19 +19,19 @@ class Login extends Component {
   };
 
   validateForm = () => {
-    const { nome, email } = this.state;
-    if (nome !== ''
-      && email !== '') {
-      this.setState({
-        disabled: false,
-      });
+    const { name, email } = this.state;
+    const condition = /^\S+@\S+\.\S+$/;
+    if (name !== '' && email.match(condition)) {
+      this.setState({ disabled: false });
+    } else {
+      this.setState({ disabled: true });
     }
   };
 
   handleClick = async () => {
     const { history } = this.props;
     const response = await getToken();
-    localStorage.setItem('token', response);
+    localStorage.setItem('token', response.token);
     history.push('/game');
   };
 

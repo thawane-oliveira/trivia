@@ -4,7 +4,6 @@ import App from '../App';
 import { renderWithRouterAndRedux } from './helpers/renderWithRouterAndRedux';
 
 describe('Componente Login', () => {
-
   it('Verifica se é possível preencher os inputs', () => {
     renderWithRouterAndRedux(<App />);
 
@@ -21,7 +20,6 @@ describe('Componente Login', () => {
     const button = screen.getByRole('button', { name: /play/i });
 
     expect(button).toBeDisabled();
-
   });
 
   it('Verifica se o botão permanece desativado em caso de e-mail inválido', () => {
@@ -30,7 +28,6 @@ describe('Componente Login', () => {
     const emailInput = screen.getByTestId('input-gravatar-email');
     const button = screen.getByRole('button', { name: /play/i });
 
-    
     userEvent.type(emailInput, 'magic2gmail.com');
     expect(button).toBeDisabled();
   });
@@ -46,13 +43,11 @@ describe('Componente Login', () => {
 
     userEvent.type(playerName, 'Yasuho');
     userEvent.type(emailInput, 'lesley@park.com');
+    userEvent.click(button)
 
-     userEvent.click(button)
-
-     await waitFor(() => { 
+    await waitFor(() => { 
       expect(history.location.pathname).toBe('/game');
-     });
-
+    });
   });
 
   it('Verifica se o botão de configurações existe na tela e redireciona para a path /settings', () => {
@@ -60,10 +55,8 @@ describe('Componente Login', () => {
 
     const button = screen.getByRole('button', { name: /configurações/i });
 
-     userEvent.click(button)
+    userEvent.click(button)
 
-     
-      expect(history.location.pathname).toBe('/settings');
-    
+    expect(history.location.pathname).toBe('/settings');
   });
 });

@@ -11,6 +11,7 @@ class Feedback extends Component {
 
   componentDidMount() {
     this.verifyAssertions();
+    this.playerRanking();
   }
 
   verifyAssertions = () => {
@@ -33,6 +34,18 @@ class Feedback extends Component {
   handleRanking = () => {
     const { history } = this.props;
     history.push('/ranking');
+  };
+
+  playerRanking = () => {
+    const { email, name, score } = this.props;
+    const playInfo = { email, name, score };
+    if (!localStorage.getItem('ranking')) {
+      localStorage.setItem('ranking', JSON.stringify([playInfo]));
+    } else {
+      const setRank = JSON.parse(localStorage.getItem('ranking'));
+      setRank.push(playInfo);
+      localStorage.setItem('ranking', JSON.stringify(setRank));
+    }
   };
 
   render() {
@@ -78,6 +91,8 @@ class Feedback extends Component {
 
 const mapStateToProps = (state) => ({
   assertions: state.player.assertions,
+  email: state.player.email,
+  name: state.player.name,
   score: state.player.score,
 });
 

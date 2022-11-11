@@ -1,17 +1,19 @@
 import { func } from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import md5 from 'crypto-js/md5';
 
 class Ranking extends Component {
   state = {
-    index: 0,
-  }
-  convertImg = () => {
-    const { email } = this.props;
-    const converImg = md5(email).toString();
-    const gravatarImage = `https://www.gravatar.com/avatar/${converImg}`;
-    return gravatarImage;
+    // ranking: [],
   };
+
+  // convertImg = () => {
+  //   const { email } = this.props;
+  //   const converImg = md5(email).toString();
+  //   const gravatarImage = `https://www.gravatar.com/avatar/${converImg}`;
+  //   return gravatarImage;
+  // };
 
   handleHome = () => {
     const { history } = this.props;
@@ -19,17 +21,32 @@ class Ranking extends Component {
   };
 
   render() {
-    const { index } = this.state;
+    const localRanking = JSON.parse(localStorage.getItem('ranking'));
     return (
       <div>
         <h1 data-testid="ranking-title">Ranking</h1>
-        <ol>
-          <li>
-            <img src={ this.convertImg() } alt="" />
-            <p data-testid:`player-name-${index}`> Name: </p>
-            <p data-testid:`player-score-${index}`>Score:</p>
-          </li>
-        </ol>
+        {localRanking
+          .sort((a, b) => b.score - a.score)
+          .map((player, index) => (
+            <main
+              key={ index }
+            >
+              <img
+                src={ md5(player.email).toString() }
+                alt="Ícone de perfil do usuário no Gracatar"
+              />
+              <p
+                data-testid={ `player-name-${index}` }
+              >
+                { player.name }
+              </p>
+              <p
+                data-testid={ `player-score-${index}` }
+              >
+                { player.score}
+              </p>
+            </main>
+          ))}
 
         <button
           type="button"
@@ -43,14 +60,14 @@ class Ranking extends Component {
     );
   }
 }
-const mapStateToProps = (state) => ({
-  email: state.player.email,
-  /* name: state.player.name,
-  score: state.player.score, */
-});
+// const mapStateToProps = (state) => ({
+//   email: state.player.email,
+//   /* name: state.player.name,
+//   score: state.player.score, */
+// });
 
 Ranking.propTypes = {
   history: func,
 }.isRequired;
 
-export default connect(mapStateToProps)(Ranking);
+export default connect()(Ranking);

@@ -4,7 +4,7 @@ import { func } from 'prop-types';
 import Header from '../components/Header';
 import { getTriviaQuestion } from '../services/api';
 import '../styles/button.css';
-import { addScorePoints } from '../redux/actions';
+import { addAssertion, addScorePoints } from '../redux/actions';
 
 class Game extends Component {
   state = {
@@ -73,12 +73,14 @@ class Game extends Component {
 
   handleClick = (event) => {
     const { value } = event.target;
+
     this.setState({ answered: true, disabled: true });
 
     const { questionId, questions, timer, rightAnswer } = this.state;
-    const { dispatch, score } = this.props;
+    const { dispatch, assertions, score } = this.props;
 
     let increaseScore = score;
+    let increaseAssertion = assertions;
     const mediumPt = 2;
     const hardPt = 3;
     const multiplier = 10;
@@ -86,15 +88,22 @@ class Game extends Component {
 
     if (lvl === 'easy' && value === rightAnswer) {
       increaseScore += multiplier + timer;
+      increaseAssertion += 1;
       dispatch(addScorePoints(increaseScore));
+      dispatch(addAssertion(increaseAssertion));
     } else if (lvl === 'medium' && value === rightAnswer) {
       increaseScore += multiplier + (timer * mediumPt);
+      increaseAssertion += 1;
       dispatch(addScorePoints(increaseScore));
+      dispatch(addAssertion(increaseAssertion));
     } else if (lvl === 'hard' && value === rightAnswer) {
       increaseScore += multiplier + (timer * hardPt);
+      increaseAssertion += 1;
       dispatch(addScorePoints(increaseScore));
+      dispatch(addAssertion(increaseAssertion));
     } else {
       dispatch(addScorePoints(increaseScore));
+      dispatch(addAssertion(increaseAssertion));
     }
   };
 
@@ -118,6 +127,15 @@ class Game extends Component {
   newQuestion = async () => {
     const { history } = this.props;
     const { questionId } = this.state;
+    const lastQuestion = 4;
+
+    this.setState((prevState) => ({
+      questionId: prevState.questionId + 1,
+    }));
+
+    if (questionId === lastQuestion) {
+      return (history.push('/feedback'));
+    }
 
     const token = localStorage.getItem('token');
     const data = await getTriviaQuestion(token);
@@ -136,7 +154,8 @@ class Game extends Component {
     this.setState({
       questions: data.results,
       randomizedAnswer: randomizedQuestions,
-      rightAnswer: correct });
+      rightAnswer: correct,
+    });
 
     const errNum = 3;
     if (data.results.length === 0 || data.response_code === errNum) {
@@ -212,6 +231,7 @@ class Game extends Component {
 
 const mapStateToProps = (state) => ({
   score: state.player.score,
+  assertions: state.player.assertions,
 });
 
 Game.propTypes = {

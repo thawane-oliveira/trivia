@@ -102,7 +102,7 @@ class Game extends Component {
     const { timer, disabled } = this.state;
     const newCount = timer - 1;
     const ONE_SECOND = 1000;
-    if (timer > 0) {
+    if (timer > 0 && disabled === false) {
       setTimeout(() => this.setState({
         timer: newCount,
       }), ONE_SECOND);
@@ -112,7 +112,43 @@ class Game extends Component {
         disabled: true,
       });
     }
-    return timer;
+    return <h3>{timer}</h3>;
+  };
+
+  newQuestion = async () => {
+    const { history } = this.props;
+    const { questionId } = this.state;
+
+    const token = localStorage.getItem('token');
+    const data = await getTriviaQuestion(token);
+    const question = data.results[questionId];
+
+    let correct = '';
+    let wrongs = [];
+
+    if (question) {
+      correct = question.correct_answer;
+      wrongs = question.incorrect_answers;
+    }
+    const allAnswers = [correct, ...wrongs];
+    const randomizedQuestions = this.randomize(allAnswers);
+
+    this.setState({
+      questions: data.results,
+      randomizedAnswer: randomizedQuestions,
+      rightAnswer: correct });
+
+    const errNum = 3;
+    if (data.results.length === 0 || data.response_code === errNum) {
+      localStorage.removeItem('token');
+      history.push('/');
+    }
+
+    this.setState({
+      timer: 30,
+      disabled: false,
+      answered: false,
+    });
   };
 
   render() {
@@ -156,6 +192,15 @@ class Game extends Component {
                     {answer}
                   </button>
                 ))}
+                {disabled && (
+                  <button
+                    data-testid="btn-next"
+                    type="button"
+                    onClick={ this.newQuestion }
+                  >
+                    Next
+                  </button>
+                )}
               </div>
             </>
           )

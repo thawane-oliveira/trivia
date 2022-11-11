@@ -121,7 +121,7 @@ class Game extends Component {
         disabled: true,
       });
     }
-    return <h3>{timer}</h3>;
+    return timer;
   };
 
   newQuestion = async () => {

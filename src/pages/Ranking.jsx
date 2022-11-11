@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import BtnHome from '../components/BtnHome';
 
 class Ranking extends Component {
   render() {
     return (
-      <h1 data-testid="ranking-title">Ranking</h1>
+      <div>
+
+        <h1 data-testid="ranking-title">Ranking</h1>
+        <BtnHome />
+      </div>
+
     );
   }
 }

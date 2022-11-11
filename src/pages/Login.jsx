@@ -41,7 +41,7 @@ class Login extends Component {
   };
 
   render() {
-    const { user } = this.props;
+    const { player } = this.props;
     const { disabled } = this.state;
     return (
       <div>
@@ -71,7 +71,7 @@ class Login extends Component {
             disabled={ disabled }
             onClick={ () => {
               this.handleClick();
-              user(this.state);
+              player(this.state);
             } }
 
           >
@@ -91,7 +91,7 @@ class Login extends Component {
   }
 }
 const mapDispatchToProps = (dispatch) => ({
-  user: (state) => dispatch(submitInfo(state)),
+  player: (state) => dispatch(submitInfo(state)),
 });
 
 Login.propTypes = {

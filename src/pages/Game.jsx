@@ -1,18 +1,20 @@
+import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { func } from 'prop-types';
 import Header from '../components/Header';
 import { getTriviaQuestion } from '../services/api';
 import '../styles/button.css';
+import { addScorePoints } from '../redux/actions';
 
 class Game extends Component {
   state = {
     questionId: 0,
     questions: [],
-    answered: '',
     rightAnswer: '',
     randomizedAnswer: [],
     timer: 30,
     disabled: false,
+    answered: false,
   };
 
   async componentDidMount() {
@@ -69,8 +71,31 @@ class Game extends Component {
     return '';
   };
 
-  handleClick = () => {
-    this.setState({ answered: true });
+  handleClick = (event) => {
+    const { value } = event.target;
+    this.setState({ answered: true, disabled: true });
+
+    const { questionId, questions, timer, rightAnswer } = this.state;
+    const { dispatch, score } = this.props;
+
+    let increaseScore = score;
+    const mediumPt = 2;
+    const hardPt = 3;
+    const multiplier = 10;
+    const lvl = questions[questionId].difficulty;
+
+    if (lvl === 'easy' && value === rightAnswer) {
+      increaseScore += multiplier + timer;
+      dispatch(addScorePoints(increaseScore));
+    } else if (lvl === 'medium' && value === rightAnswer) {
+      increaseScore += multiplier + (timer * mediumPt);
+      dispatch(addScorePoints(increaseScore));
+    } else if (lvl === 'hard' && value === rightAnswer) {
+      increaseScore += multiplier + (timer * hardPt);
+      dispatch(addScorePoints(increaseScore));
+    } else {
+      dispatch(addScorePoints(increaseScore));
+    }
   };
 
   timerCountdown = () => {
@@ -126,6 +151,7 @@ class Game extends Component {
                     }
                     disabled={ disabled }
                     onClick={ this.handleClick }
+                    value={ answer }
                   >
                     {answer}
                   </button>
@@ -139,8 +165,13 @@ class Game extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  score: state.player.score,
+});
+
 Game.propTypes = {
   history: func,
+  dispatch: func,
 }.isRequired;
 
-export default Game;
+export default connect(mapStateToProps)(Game);

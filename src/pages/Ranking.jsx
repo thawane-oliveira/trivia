@@ -21,7 +21,6 @@ class Ranking extends Component {
 
   render() {
     const localRanking = JSON.parse(localStorage.getItem('ranking'));
-    console.log(localRanking);
     return (
       <div>
         <h1 data-testid="ranking-title">Ranking</h1>

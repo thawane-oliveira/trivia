@@ -15,7 +15,11 @@ class Header extends Component {
     const { name, score } = this.props;
     return (
       <header>
-        <img src={ this.convertImg() } data-testid="header-profile-picture" alt="" />
+        <img
+          src={ this.convertImg() }
+          data-testid="header-profile-picture"
+          alt="ícone do player no Gravatar"
+        />
         <p data-testid="header-player-name">
           {name}
         </p>

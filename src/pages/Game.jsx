@@ -115,6 +115,41 @@ class Game extends Component {
     return timer;
   };
 
+  newQuestion = async () => {
+    const { history } = this.props;
+    const { questionId } = this.state;
+
+    const token = localStorage.getItem('token');
+    const data = await getTriviaQuestion(token);
+    const question = data.results[questionId];
+
+    let correct = '';
+    let wrongs = [];
+
+    if (question) {
+      correct = question.correct_answer;
+      wrongs = question.incorrect_answers;
+    }
+    const allAnswers = [correct, ...wrongs];
+    const randomizedQuestions = this.randomize(allAnswers);
+
+    this.setState({
+      questions: data.results,
+      randomizedAnswer: randomizedQuestions,
+      rightAnswer: correct });
+
+    const errNum = 3;
+    if (data.results.length === 0 || data.response_code === errNum) {
+      localStorage.removeItem('token');
+      history.push('/');
+    }
+
+    this.setState({
+      timer: 30,
+      disabled: false,
+    });
+  };
+
   render() {
     const {
       randomizedAnswer,
@@ -156,6 +191,15 @@ class Game extends Component {
                     {answer}
                   </button>
                 ))}
+                {disabled && (
+                  <button
+                    data-testid="btn-next"
+                    type="button"
+                    onClick={ this.newQuestion }
+                  >
+                    Next
+                  </button>
+                )}
               </div>
             </>
           )

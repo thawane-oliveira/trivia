@@ -102,7 +102,7 @@ class Game extends Component {
     const { timer, disabled } = this.state;
     const newCount = timer - 1;
     const ONE_SECOND = 1000;
-    if (timer > 0) {
+    if (timer > 0 && disabled === false) {
       setTimeout(() => this.setState({
         timer: newCount,
       }), ONE_SECOND);
@@ -112,7 +112,7 @@ class Game extends Component {
         disabled: true,
       });
     }
-    return timer;
+    return <h3>{timer}</h3>;
   };
 
   newQuestion = async () => {

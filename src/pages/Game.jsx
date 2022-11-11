@@ -147,6 +147,7 @@ class Game extends Component {
     this.setState({
       timer: 30,
       disabled: false,
+      answered: false,
     });
   };
 

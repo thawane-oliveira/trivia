@@ -9,12 +9,11 @@ class Ranking extends Component {
   };
 
   // convertImg = () => {
-  //   const { email } = this.props;
+  //   const localRanking = JSON.parse(localStorage.getItem('ranking'));
   //   const converImg = md5(email).toString();
   //   const gravatarImage = `https://www.gravatar.com/avatar/${converImg}`;
   //   return gravatarImage;
   // };
-
   handleHome = () => {
     const { history } = this.props;
     history.push('/');
@@ -32,7 +31,7 @@ class Ranking extends Component {
               key={ index }
             >
               <img
-                src={ md5(player.email).toString() }
+                src={ `https://www.gravatar.com/avatar/${md5(player.email).toString()}` }
                 alt="Ícone de perfil do usuário no Gracatar"
               />
               <p
@@ -47,7 +46,6 @@ class Ranking extends Component {
               </p>
             </main>
           ))}
-
         <button
           type="button"
           data-testid="btn-go-home"
@@ -56,7 +54,6 @@ class Ranking extends Component {
           home
         </button>
       </div>
-
     );
   }
 }
@@ -65,9 +62,7 @@ class Ranking extends Component {
 //   /* name: state.player.name,
 //   score: state.player.score, */
 // });
-
 Ranking.propTypes = {
   history: func,
 }.isRequired;
-
 export default connect()(Ranking);

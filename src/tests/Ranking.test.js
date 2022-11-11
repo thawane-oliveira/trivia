@@ -5,7 +5,7 @@ import App from '../App';
 import Ranking from '../pages/Ranking';
 import { renderWithRouterAndRedux } from './helpers/renderWithRouterAndRedux';
 
-describe('Componente Login', () => {
+describe('Componente Ranking', () => {
 
   it('Verifica se existe um botão home e se ele direciona para a path correta', () => {
 

@@ -51,6 +51,7 @@ describe('Componente Login', () => {
 
     await waitFor(() => {
     expect(history.location.pathname).toBe('/game'); }, { timeout: 3000 });
+    // verificado em https://stackoverflow.com/questions/66661163/react-testing-librarys-waitfor-not-working
   });
 
   it('Verifica se o botão de configurações existe na tela e redireciona para a path /settings', () => {

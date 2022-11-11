@@ -1,4 +1,4 @@
-import { SUBMIT_INFO, SCORE_POINTS } from '../actions';
+import { SUBMIT_INFO, SCORE_POINTS, ADD_ASSERTION } from '../actions';
 
 const INITIAL_STATE = {
   player: {},
@@ -17,6 +17,11 @@ const player = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       score: action.value,
+    };
+  case ADD_ASSERTION:
+    return {
+      ...state,
+      assertions: action.one,
     };
 
   default:

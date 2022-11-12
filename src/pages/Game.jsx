@@ -9,10 +9,8 @@ import { addAssertion, addScorePoints } from '../redux/actions';
 class Game extends Component {
   state = {
     questionId: 0,
-    questions: '',
-    category: '',
+    questions: [],
     rightAnswer: '',
-    receivedQuestions: [],
     randomizedAnswer: [],
     timer: 30,
     disabled: false,
@@ -21,54 +19,47 @@ class Game extends Component {
 
   async componentDidMount() {
     this.timerCountdown();
-
-    const { history } = this.props;
-    const { questionId } = this.state;
-
-    const token = localStorage.getItem('token');
-    const data = await getTriviaQuestion(token);
-
-    const allQuestions = [...data.results];
-
-    let correct = ''; // há somente uma resposta certa, que é uma string única, podendo ser booleano ou não
-    let wrongs = []; // há mais de uma resposta errada, a api retorna um array de erradas, podendo ser booleano ou não
-
-    if (allQuestions[questionId]) {
-      correct = allQuestions[questionId].correct_answer;
-      wrongs = allQuestions[questionId].incorrect_answers;
-    }
-    const allAnswers = [correct, ...wrongs];
-    const randomizedQuestions = this.randomize(allAnswers);
-
-    this.setState({
-      receivedQuestions: allQuestions,
-      questions: allQuestions[questionId].question,
-      category: allQuestions[questionId].category,
-      randomizedAnswer: randomizedQuestions,
-      rightAnswer: correct });
-
-    const errNum = 3;
-    if (data.results.length === 0 || data.response_code === errNum) {
-      localStorage.removeItem('token');
-      history.push('/');
-    }
-
-    this.setState((prevState) => ({
-      questionId: prevState.questionId + 1,
-    }));
+    this.callTokenApi();
   }
 
   componentDidUpdate() {
     this.timerCountdown();
   }
 
-  randomize = (questionArray) => {
-    if (questionArray.length > 0) {
-      const num = 0.5;
-      const randomizedQuestions = questionArray.sort(() => num - Math.random());
-      return randomizedQuestions;
-      // consultado sobre randomização de array em: https://dev.to/codebubb/how-to-shuffle-an-array-in-javascript-2ikj
+  callTokenApi = async () => {
+    const { history } = this.props;
+    const { questionId } = this.state;
+
+    const token = localStorage.getItem('token');
+    const data = await getTriviaQuestion(token);
+
+    const errNum = 3;
+    if (data.response_code === errNum) {
+      localStorage.removeItem('token');
+      return history.push('/');
     }
+
+    const question = data.results[questionId];
+
+    // let correct = ''; // há somente uma resposta certa, que é uma string única, podendo ser booleano ou não
+    // let wrongs = []; // há mais de uma resposta errada, a api retorna um array de erradas, podendo ser booleano ou não
+
+    const correct = question.correct_answer;
+    const wrongs = question.incorrect_answers;
+    const allAnswers = [correct, ...wrongs];
+    const randomizedQuestions = this.randomize(allAnswers);
+
+    this.setState({
+      questions: data.results,
+      randomizedAnswer: randomizedQuestions,
+      rightAnswer: correct });
+  };
+
+  randomize = (questionArray) => {
+    const num = 0.5;
+    const randomizedQuestions = questionArray.sort(() => num - Math.random());
+    return randomizedQuestions;
+    // consultado sobre randomização de array em: https://dev.to/codebubb/how-to-shuffle-an-array-in-javascript-2ikj
   };
 
   changeButtonColor = (answer) => {
@@ -84,15 +75,14 @@ class Game extends Component {
 
     this.setState({ answered: true, disabled: true });
 
-    const { questionId, receivedQuestions, timer, rightAnswer } = this.state;
+    const { questionId, questions, timer, rightAnswer } = this.state;
     const { dispatch, assertions, score } = this.props;
-
     let increaseScore = score;
     let increaseAssertion = assertions;
     const mediumPt = 2;
     const hardPt = 3;
     const multiplier = 10;
-    const lvl = receivedQuestions[questionId].difficulty;
+    const lvl = questions[questionId].difficulty;
 
     if (lvl === 'easy' && value === rightAnswer) {
       increaseScore += multiplier + timer;
@@ -125,68 +115,60 @@ class Game extends Component {
       }), ONE_SECOND);
     }
     if (timer === 0 && disabled === false) {
-      this.setState({
-        disabled: true,
-      });
+      this.setState({ disabled: true });
     }
     return timer;
   };
 
   newQuestion = async () => {
     const { history } = this.props;
-    const { questionId, receivedQuestions } = this.state;
-    const lastQuestion = 4;
+    const { questions, questionId } = this.state;
+    const newId = questionId + 1;
+    const lastQuestion = 5;
 
-    if (questionId === lastQuestion) {
+    if (newId === lastQuestion) {
       return (history.push('/feedback'));
     }
 
-    let correct = '';
-    let wrongs = [];
+    const question = questions[newId];
 
-    if (receivedQuestions[questionId]) {
-      correct = receivedQuestions[questionId].correct_answer;
-      wrongs = receivedQuestions[questionId].incorrect_answers;
-    }
+    const correct = question.correct_answer;
+    const wrongs = question.incorrect_answers;
+
     const allAnswers = [correct, ...wrongs];
     const randomizedQuestions = this.randomize(allAnswers);
 
     this.setState({
+      questionId: newId,
       randomizedAnswer: randomizedQuestions,
-      questions: receivedQuestions[questionId].question,
-      category: receivedQuestions[questionId].category,
       rightAnswer: correct,
       timer: 30,
       disabled: false,
       answered: false,
     });
-
-    this.setState((prevState) => ({
-      questionId: prevState.questionId + 1,
-    }));
   };
 
   render() {
     const {
       randomizedAnswer,
       questions,
-      category,
+      questionId,
       rightAnswer,
       disabled,
       timer,
     } = this.state;
 
-    // const question = questions[questionId];
+    const question = questions[questionId];
 
     return (
       <>
         <Header />
         {
-          questions && (
+          question && (
             <>
-              <h2 data-testid="question-category">{category}</h2>
+              <h2 data-testid="question-category">{question.category}</h2>
               <h3>{timer}</h3>
-              <p data-testid="question-text">{questions}</p>
+              <p data-testid="question-text">{question.question}</p>
               <div
                 data-testid="answer-options"
               >

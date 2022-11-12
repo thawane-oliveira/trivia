@@ -9,8 +9,10 @@ import { addAssertion, addScorePoints } from '../redux/actions';
 class Game extends Component {
   state = {
     questionId: 0,
-    questions: [],
+    questions: '',
+    category: '',
     rightAnswer: '',
+    receivedQuestions: [],
     randomizedAnswer: [],
     timer: 30,
     disabled: false,
@@ -26,20 +28,22 @@ class Game extends Component {
     const token = localStorage.getItem('token');
     const data = await getTriviaQuestion(token);
 
-    const question = data.results[questionId];
+    const allQuestions = [...data.results];
 
     let correct = ''; // há somente uma resposta certa, que é uma string única, podendo ser booleano ou não
     let wrongs = []; // há mais de uma resposta errada, a api retorna um array de erradas, podendo ser booleano ou não
 
-    if (question) {
-      correct = question.correct_answer;
-      wrongs = question.incorrect_answers;
+    if (allQuestions[questionId]) {
+      correct = allQuestions[questionId].correct_answer;
+      wrongs = allQuestions[questionId].incorrect_answers;
     }
     const allAnswers = [correct, ...wrongs];
     const randomizedQuestions = this.randomize(allAnswers);
 
     this.setState({
-      questions: data.results,
+      receivedQuestions: allQuestions,
+      questions: allQuestions[questionId].question,
+      category: allQuestions[questionId].category,
       randomizedAnswer: randomizedQuestions,
       rightAnswer: correct });
 
@@ -48,6 +52,10 @@ class Game extends Component {
       localStorage.removeItem('token');
       history.push('/');
     }
+
+    this.setState((prevState) => ({
+      questionId: prevState.questionId + 1,
+    }));
   }
 
   componentDidUpdate() {
@@ -76,7 +84,7 @@ class Game extends Component {
 
     this.setState({ answered: true, disabled: true });
 
-    const { questionId, questions, timer, rightAnswer } = this.state;
+    const { questionId, receivedQuestions, timer, rightAnswer } = this.state;
     const { dispatch, assertions, score } = this.props;
 
     let increaseScore = score;
@@ -84,7 +92,7 @@ class Game extends Component {
     const mediumPt = 2;
     const hardPt = 3;
     const multiplier = 10;
-    const lvl = questions[questionId].difficulty;
+    const lvl = receivedQuestions[questionId].difficulty;
 
     if (lvl === 'easy' && value === rightAnswer) {
       increaseScore += multiplier + timer;
@@ -126,65 +134,59 @@ class Game extends Component {
 
   newQuestion = async () => {
     const { history } = this.props;
-    const { questionId } = this.state;
+    const { questionId, receivedQuestions } = this.state;
     const lastQuestion = 4;
-
-    this.setState((prevState) => ({
-      questionId: prevState.questionId + 1,
-    }));
 
     if (questionId === lastQuestion) {
       return (history.push('/feedback'));
     }
 
-    const token = localStorage.getItem('token');
-    const data = await getTriviaQuestion(token);
-    const question = data.results[questionId];
-
     let correct = '';
     let wrongs = [];
 
-    if (question) {
-      correct = question.correct_answer;
-      wrongs = question.incorrect_answers;
+    if (receivedQuestions[questionId]) {
+      correct = receivedQuestions[questionId].correct_answer;
+      wrongs = receivedQuestions[questionId].incorrect_answers;
     }
     const allAnswers = [correct, ...wrongs];
     const randomizedQuestions = this.randomize(allAnswers);
 
     this.setState({
-      questions: data.results,
       randomizedAnswer: randomizedQuestions,
+      questions: receivedQuestions[questionId].question,
+      category: receivedQuestions[questionId].category,
       rightAnswer: correct,
-    });
-
-    this.setState({
       timer: 30,
       disabled: false,
       answered: false,
     });
+
+    this.setState((prevState) => ({
+      questionId: prevState.questionId + 1,
+    }));
   };
 
   render() {
     const {
       randomizedAnswer,
       questions,
-      questionId,
+      category,
       rightAnswer,
       disabled,
       timer,
     } = this.state;
 
-    const question = questions[questionId];
+    // const question = questions[questionId];
 
     return (
       <>
         <Header />
         {
-          question && (
+          questions && (
             <>
-              <h2 data-testid="question-category">{question.category}</h2>
+              <h2 data-testid="question-category">{category}</h2>
               <h3>{timer}</h3>
-              <p data-testid="question-text">{question.question}</p>
+              <p data-testid="question-text">{questions}</p>
               <div
                 data-testid="answer-options"
               >

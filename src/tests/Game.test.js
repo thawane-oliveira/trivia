@@ -190,7 +190,7 @@ await waitFor(() => {
 await waitFor(() => {
   const wellDone = screen.getByRole('heading', {name: /well done!/i, level: 1});
   expect(wellDone).toBeInTheDocument();
-});
+}, 3000);
 });
 
 it('Verifica se é exibido Could be better ao acertar menos do que 3 perguntas', async () => {
@@ -250,7 +250,7 @@ await waitFor(() => {
 });
 
 await waitFor(() => {
-  const wrong = screen.getByRole('button', {name: /91/i});
+  const wrong = screen.getByRole('button', {name: '91'});
   userEvent.click(wrong);
 });
 
@@ -262,9 +262,7 @@ await waitFor(() => {
 await waitFor(() => {
   const couldBeBetter = screen.getByRole('heading', {name: /could be better.../i, level: 1});
   expect(couldBeBetter).toBeInTheDocument();
-});
-
-
+}, 3000);
 });
 
 

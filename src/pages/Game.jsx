@@ -157,12 +157,6 @@ class Game extends Component {
       rightAnswer: correct,
     });
 
-    const errNum = 3;
-    if (data.results.length === 0 || data.response_code === errNum) {
-      localStorage.removeItem('token');
-      history.push('/');
-    }
-
     this.setState({
       timer: 30,
       disabled: false,

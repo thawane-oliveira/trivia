@@ -2,6 +2,7 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 import { renderWithRouterAndRedux } from './helpers/renderWithRouterAndRedux';
+import { mockQuestion } from './helpers/mockQuestion';
 
 describe('Componente Login', () => {
 
@@ -28,19 +29,15 @@ describe('Componente Login', () => {
   });
 
   it('Verifica se o botão é ativado após preencher os campos e é feito o redirecionamento para a path /game', async () => {
+
+    localStorage.setItem('token','504150afd88547f64f5c595c0e031215a4e1400cbbc6376670dba45711b4b9d7')
+    jest.spyOn(global, 'fetch');
+    global.fetch.mockResolvedValue({
+    json: jest.fn().mockResolvedValue(mockQuestion),
+    });
+
     const { history } = renderWithRouterAndRedux(<App />);
-    // const token = {
-    //   response_code: 0,
-    //   response_message: "Token Generated Successfully!",
-    //   token: "71a52c004b75aa59615ce35fe4f02148693c8543b4a978ac435a81c1bcce7e1d",
-    // }
-    // global.fetch = jest.fn(() => Promise.resolve({
-    //   json: () => Promise.resolve(token),
-    //   }));
-    // jest.spyOn(global, 'fetch');
-    // global.fetch.mockResolvedValue({
-    //   json: jest.fn().mockResolvedValue(token),
-    // });
+
     const playerName = screen.getByTestId('input-player-name');
     const emailInput = screen.getByTestId('input-gravatar-email');
     const button = screen.getByRole('button', { name: /play/i });
@@ -50,7 +47,7 @@ describe('Componente Login', () => {
     userEvent.click(button)
 
     await waitFor(() => {
-    expect(history.location.pathname).toBe('/game'); }, { timeout: 3000 });
+    expect(history.location.pathname).toBe('/game'); }, 3000 );
     // verificado em https://stackoverflow.com/questions/66661163/react-testing-librarys-waitfor-not-working
   });
 

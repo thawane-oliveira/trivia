@@ -19,22 +19,33 @@ class Game extends Component {
 
   async componentDidMount() {
     this.timerCountdown();
+    this.callTokenApi();
+  }
 
+  componentDidUpdate() {
+    this.timerCountdown();
+  }
+
+  callTokenApi = async () => {
     const { history } = this.props;
     const { questionId } = this.state;
 
     const token = localStorage.getItem('token');
     const data = await getTriviaQuestion(token);
 
+    const errNum = 3;
+    if (data.response_code === errNum) {
+      localStorage.removeItem('token');
+      return history.push('/');
+    }
+
     const question = data.results[questionId];
 
-    let correct = ''; // há somente uma resposta certa, que é uma string única, podendo ser booleano ou não
-    let wrongs = []; // há mais de uma resposta errada, a api retorna um array de erradas, podendo ser booleano ou não
+    // let correct = ''; // há somente uma resposta certa, que é uma string única, podendo ser booleano ou não
+    // let wrongs = []; // há mais de uma resposta errada, a api retorna um array de erradas, podendo ser booleano ou não
 
-    if (question) {
-      correct = question.correct_answer;
-      wrongs = question.incorrect_answers;
-    }
+    const correct = question.correct_answer;
+    const wrongs = question.incorrect_answers;
     const allAnswers = [correct, ...wrongs];
     const randomizedQuestions = this.randomize(allAnswers);
 
@@ -42,25 +53,13 @@ class Game extends Component {
       questions: data.results,
       randomizedAnswer: randomizedQuestions,
       rightAnswer: correct });
-
-    const errNum = 3;
-    if (data.results.length === 0 || data.response_code === errNum) {
-      localStorage.removeItem('token');
-      history.push('/');
-    }
-  }
-
-  componentDidUpdate() {
-    this.timerCountdown();
-  }
+  };
 
   randomize = (questionArray) => {
-    if (questionArray.length > 0) {
-      const num = 0.5;
-      const randomizedQuestions = questionArray.sort(() => num - Math.random());
-      return randomizedQuestions;
-      // consultado sobre randomização de array em: https://dev.to/codebubb/how-to-shuffle-an-array-in-javascript-2ikj
-    }
+    const num = 0.5;
+    const randomizedQuestions = questionArray.sort(() => num - Math.random());
+    return randomizedQuestions;
+    // consultado sobre randomização de array em: https://dev.to/codebubb/how-to-shuffle-an-array-in-javascript-2ikj
   };
 
   changeButtonColor = (answer) => {
@@ -78,7 +77,6 @@ class Game extends Component {
 
     const { questionId, questions, timer, rightAnswer } = this.state;
     const { dispatch, assertions, score } = this.props;
-
     let increaseScore = score;
     let increaseAssertion = assertions;
     const mediumPt = 2;
@@ -117,53 +115,33 @@ class Game extends Component {
       }), ONE_SECOND);
     }
     if (timer === 0 && disabled === false) {
-      this.setState({
-        disabled: true,
-      });
+      this.setState({ disabled: true });
     }
     return timer;
   };
 
   newQuestion = async () => {
     const { history } = this.props;
-    const { questionId } = this.state;
-    const lastQuestion = 4;
+    const { questions, questionId } = this.state;
+    const newId = questionId + 1;
+    const lastQuestion = 5;
 
-    this.setState((prevState) => ({
-      questionId: prevState.questionId + 1,
-    }));
-
-    if (questionId === lastQuestion) {
+    if (newId === lastQuestion) {
       return (history.push('/feedback'));
     }
 
-    const token = localStorage.getItem('token');
-    const data = await getTriviaQuestion(token);
-    const question = data.results[questionId];
+    const question = questions[newId];
 
-    let correct = '';
-    let wrongs = [];
+    const correct = question.correct_answer;
+    const wrongs = question.incorrect_answers;
 
-    if (question) {
-      correct = question.correct_answer;
-      wrongs = question.incorrect_answers;
-    }
     const allAnswers = [correct, ...wrongs];
     const randomizedQuestions = this.randomize(allAnswers);
 
     this.setState({
-      questions: data.results,
+      questionId: newId,
       randomizedAnswer: randomizedQuestions,
       rightAnswer: correct,
-    });
-
-    const errNum = 3;
-    if (data.results.length === 0 || data.response_code === errNum) {
-      localStorage.removeItem('token');
-      history.push('/');
-    }
-
-    this.setState({
       timer: 30,
       disabled: false,
       answered: false,

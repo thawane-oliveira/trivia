@@ -12,7 +12,8 @@ describe('Componente Feedback', () => {
     const button = screen.getByRole('button', { name: /play again/i });
     expect(button).toBeInTheDocument();
     userEvent.click(button)
-    expect(history.location.pathname).toBe('/');
+    const { pathname } = history.location;
+    expect(pathname).toBe('/');
   });
   it('Verifica se o botão Ranking existe na tela e redireciona para o path /ranking', () => {
     const { history } = renderWithRouterAndRedux(<App />);

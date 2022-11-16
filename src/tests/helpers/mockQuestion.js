@@ -28,7 +28,7 @@ export const mockQuestion =
       "category": "General Knowledge",
       "type": "boolean",
       "difficulty": "medium",
-      "question": "The word &quot;news&quot; originates from the first letters of the 4 main directions on a compass (North, East, West, South).",
+      "question": 'The word "news" originates from the first letters of the 4 main directions on a compass (North, East, West, South).',
       "correct_answer": "False",
       "incorrect_answers": [
         "True"

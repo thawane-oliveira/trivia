@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import md5 from 'crypto-js/md5';
 import { string, number } from 'prop-types';
+import '../styles/Header.css';
 
 class Header extends Component {
   convertImg = () => {
@@ -14,16 +15,25 @@ class Header extends Component {
   render() {
     const { name, score } = this.props;
     return (
-      <header>
+      <header className="header-container">
         <img
+          className="header-icon"
           src={ this.convertImg() }
           data-testid="header-profile-picture"
           alt="ícone do player no Gravatar"
         />
-        <p data-testid="header-player-name">
+        <p
+          data-testid="header-player-name"
+          className="header-name"
+        >
           {name}
         </p>
-        <p data-testid="header-score">{score}</p>
+        <p
+          data-testid="header-score"
+          className="header-score"
+        >
+          {score}
+        </p>
       </header>
     );
   }

@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Jura:wght@300;400;500;700&display=swap') ;
+
+.feedback-container {
+  align-items: center;
+  border: 1px outset blueviolet;
+  box-shadow: 2px 2px 10px black;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  font-family: Jura , sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  height: 50vh;
+  margin: 0 auto;
+  margin-top: 18vh;
+  text-align: center;
+  width: 50vh;
+}
+
+.feedback-assertions {
+  text-shadow: 2px 2px 20px black;
+}
+
+.feedback-score {
+  text-shadow: 2px 2px 20px black;
+}
+
+.feedback-bad, .feedback-good {
+  animation: rotate 0.6s linear;
+  text-shadow: 5px 5px 10px black;
+}
+
+@keyframes rotate {
+
+  0% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(180deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.playagain-button, .ranking-button {
+  box-shadow: 2px 2px 10px black;
+}
+
+.playagain-button:hover, .ranking-button:hover {
+  background-image: linear-gradient(blueviolet, black);
+}

@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Jura:wght@300;400;500;700&display=swap') ;
+
+.header-container {
+  align-items: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  font-family: Jura , sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  height: 15vh;
+  margin-top: 2vh;
+}
+
+.header-icon {
+  border-radius: 100%;
+  box-shadow: 2px 2px 20px black;
+  height: auto;
+  max-height: 120px;
+  max-width: 120px;
+  width: auto;
+}
+
+.header-name {
+  text-shadow: 0 0 20px white , 0 0 20px blueviolet;
+}
+
+.header-score {
+  text-shadow: 0 0 20px white , 0 0 20px blueviolet;
+}

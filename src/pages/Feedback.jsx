@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { number } from 'prop-types';
 import Header from '../components/Header';
+import '../styles/Feedback.css';
 
 class Feedback extends Component {
   state = {
@@ -55,34 +56,61 @@ class Feedback extends Component {
     return (
       <>
         <Header />
-        <h2 data-testid="feedback-total-question">{assertions}</h2>
-        <h2 data-testid="feedback-total-score">{score}</h2>
-        {
-          couldBeBetter && (
-            <h1 data-testid="feedback-text">Could be better...</h1>
-          )
-        }
-        {
-          wellDone && (
-            <h1 data-testid="feedback-text">Well Done!</h1>
-          )
-        }
-        <div>
-          <button
-            type="button"
-            data-testid="btn-play-again"
-            onClick={ this.handlePlayAgain }
+        <div className="feedback-container">
+          <h2
+            data-testid="feedback-total-question"
+            className="feedback-assertions"
           >
-            Play Again
+            {`Assertions:
+            ${assertions}`}
+          </h2>
+          <h2
+            className="feedback-score"
+            data-testid="feedback-total-score"
+          >
 
-          </button>
-          <button
-            type="button"
-            data-testid="btn-ranking"
-            onClick={ this.handleRanking }
-          >
-            Ranking
-          </button>
+            {`Total score:
+            ${score}`}
+          </h2>
+          {
+            couldBeBetter && (
+              <h1
+                className="feedback-bad"
+                data-testid="feedback-text"
+              >
+                Could be better...
+              </h1>
+            )
+          }
+          {
+            wellDone && (
+              <h1
+                className="feedback-good"
+                data-testid="feedback-text"
+              >
+                Well Done!
+              </h1>
+            )
+          }
+          <div className="feedback-button-container">
+            <button
+              className="playagain-button"
+              type="button"
+              data-testid="btn-play-again"
+              onClick={ this.handlePlayAgain }
+            >
+              Play Again
+
+            </button>
+            <button
+              className="ranking-button"
+              type="button"
+              data-testid="btn-ranking"
+              onClick={ this.handleRanking }
+            >
+              Ranking
+            </button>
+          </div>
         </div>
       </>
     );

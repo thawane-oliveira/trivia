@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Jura:wght@300;400;500;700&display=swap') ;
+
+.ranking-container {
+  align-items: center;
+  border: 1px outset blueviolet;
+  box-shadow: 2px 2px 10px black;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  font-family: Jura , sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0 auto;
+  margin-top: 18vh;
+  text-align: center;
+  width: 50vh;
+}
+
+.ranking-name, .ranking-score, .ranking-title {
+  text-shadow: 2px 2px 20px black;
+}
+
+.ranking-icon {
+  border-radius: 100%;
+  box-shadow: 2px 2px 20px black;
+  height: auto;
+  max-height: 120px;
+  max-width: 120px;
+  width: auto;
+}
+

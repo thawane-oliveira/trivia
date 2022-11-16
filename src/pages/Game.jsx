@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import { getTriviaQuestion } from '../services/api';
 import '../styles/button.css';
 import { addAssertion, addScorePoints } from '../redux/actions';
+import '../styles/Game.css';
 
 class Game extends Component {
   state = {
@@ -33,13 +34,27 @@ class Game extends Component {
     const token = localStorage.getItem('token');
     const data = await getTriviaQuestion(token);
 
+    const repairedQuotes = data.results.map((item) => {
+      const entities = {
+        '&#039;': '\'', '&quot;': '"',
+      };
+
+      item.question = item.question.replaceAll(/&#?\w+;/g, (match) => entities[match]);
+      item.correct_answer = item.correct_answer.replaceAll(/&#?\w+;/g, (match) => entities[match]);
+
+      item.incorrect_answers = item.incorrect_answers
+        .map((answer) => answer.replaceAll(/&#?\w+;/g, (match) => entities[match]));
+
+      return item;
+    });
+
     const errNum = 3;
     if (data.response_code === errNum) {
       localStorage.removeItem('token');
       return history.push('/');
     }
 
-    const question = data.results[questionId];
+    const question = repairedQuotes[questionId];
 
     // let correct = ''; // há somente uma resposta certa, que é uma string única, podendo ser booleano ou não
     // let wrongs = []; // há mais de uma resposta errada, a api retorna um array de erradas, podendo ser booleano ou não
@@ -50,7 +65,7 @@ class Game extends Component {
     const randomizedQuestions = this.randomize(allAnswers);
 
     this.setState({
-      questions: data.results,
+      questions: repairedQuotes,
       randomizedAnswer: randomizedQuestions,
       rightAnswer: correct });
   };
@@ -165,11 +180,22 @@ class Game extends Component {
         <Header />
         {
           question && (
-            <>
-              <h2 data-testid="question-category">{question.category}</h2>
-              <h3>{timer}</h3>
-              <p data-testid="question-text">{question.question}</p>
+            <div className="question-container">
+              <h2
+                data-testid="question-category"
+                className="question-title"
+              >
+                {question.category}
+              </h2>
+              <h3 className="question-timer">{timer}</h3>
+              <p
+                className="question-text"
+                data-testid="question-text"
+              >
+                {question.question}
+              </p>
               <div
+                className="answer-container"
                 data-testid="answer-options"
               >
                 {randomizedAnswer.map((answer, index) => (
@@ -199,7 +225,7 @@ class Game extends Component {
                   </button>
                 )}
               </div>
-            </>
+            </div>
           )
         }
       </>

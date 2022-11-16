@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { func } from 'prop-types';
 import { getToken } from '../services/api';
 import { submitInfo } from '../redux/actions';
+import '../styles/Login.css';
 
 class Login extends Component {
   state = {
@@ -45,27 +46,26 @@ class Login extends Component {
     const { disabled } = this.state;
     return (
       <div>
-
-        <form>
-          <label htmlFor="name">
-            Nome:
-            <input
-              type="text"
-              data-testid="input-player-name"
-              name="name"
-              onChange={ this.handleChange }
-            />
-          </label>
-          <label htmlFor="email">
-            Email:
-            <input
-              type="email"
-              data-testid="input-gravatar-email"
-              name="email"
-              onChange={ this.handleChange }
-            />
-          </label>
+        <h1 className="login-title">Trivia</h1>
+        <form className="form-container">
+          <input
+            className="input-name"
+            placeholder="Digite seu nome"
+            type="text"
+            data-testid="input-player-name"
+            name="name"
+            onChange={ this.handleChange }
+          />
+          <input
+            className="input-email"
+            placeholder="Digite seu e-mail"
+            type="email"
+            data-testid="input-gravatar-email"
+            name="email"
+            onChange={ this.handleChange }
+          />
           <button
+            className="play-button"
             type="button"
             data-testid="btn-play"
             disabled={ disabled }
@@ -78,6 +78,7 @@ class Login extends Component {
             Play
           </button>
           <button
+            className="settings-button"
             type="button"
             data-testid="btn-settings"
             onClick={ this.handleSettings }

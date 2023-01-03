@@ -11,8 +11,7 @@ describe('Componente Game', () => {
   // });
 
   it('Verifica se os dados do jogador estão na tela do componente Game', async () => {
-
-    localStorage.setItem('token', '504150afd88547f64f5c595c0e031215a4e1400cbbc6376670dba45711b4b9d7')
+    localStorage.setItem('token', '504150afd88547f64f5c595c0e031215a4e1400cbbc6376670dba45711b4b9d7');
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValue({
       json: jest.fn().mockResolvedValue(mockQuestion),
@@ -37,8 +36,7 @@ describe('Componente Game', () => {
   });
 
   it('Verifica se os dados da pergunta aparecem na tela do componente Game', async () => {
-
-    localStorage.setItem('token', '504150afd88547f64f5c595c0e031215a4e1400cbbc6376670dba45711b4b9d7')
+    localStorage.setItem('token', '504150afd88547f64f5c595c0e031215a4e1400cbbc6376670dba45711b4b9d7');
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValue({
       json: jest.fn().mockResolvedValue(mockQuestion),
@@ -51,7 +49,6 @@ describe('Componente Game', () => {
     userEvent.type(emailInput, 'teste@teste.com');
     userEvent.type(playerName, 'Toasty');
     userEvent.click(buttonPlay);
-
 
     await waitFor(() => {
       const H2 = screen.getByTestId('question-category');
@@ -60,12 +57,12 @@ describe('Componente Game', () => {
 
       expect(questionText).toBeInTheDocument();
       expect(timer).toBeInTheDocument();
-      expect(H2).toBeInTheDocument()
+      expect(H2).toBeInTheDocument();
     });
   });
 
   it('Verifica se é possível clicar em algum botão de resposta e em seguida no botão next', async () => {
-    localStorage.setItem('token', '504150afd88547f64f5c595c0e031215a4e1400cbbc6376670dba45711b4b9d7')
+    localStorage.setItem('token', '504150afd88547f64f5c595c0e031215a4e1400cbbc6376670dba45711b4b9d7');
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValue({
       json: jest.fn().mockResolvedValue(mockQuestion),
@@ -78,7 +75,6 @@ describe('Componente Game', () => {
     userEvent.type(emailInput, 'teste@teste.com');
     userEvent.type(playerName, 'Toasty');
     userEvent.click(buttonPlay);
-
 
     await waitFor(() => {
       const answerDiv = screen.getByTestId('answer-options');
@@ -99,8 +95,7 @@ describe('Componente Game', () => {
   });
 
   it('Verifica se o jogador volta para a tela inicial caso o token seja inválido', async () => {
-
-    localStorage.setItem('token', '')
+    localStorage.setItem('token', '');
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValue({
       json: jest.fn().mockResolvedValue(invalidToken),
@@ -126,7 +121,7 @@ describe('Componente Game', () => {
   });
 
   it('Verifica se as respostas são desativadas quando o tempo acabar', async () => {
-    localStorage.setItem('token', '504150afd88547f64f5c595c0e031215a4e1400cbbc6376670dba45711b4b9d7')
+    localStorage.setItem('token', '504150afd88547f64f5c595c0e031215a4e1400cbbc6376670dba45711b4b9d7');
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValue({
       json: jest.fn().mockResolvedValue(mockQuestion),
@@ -140,7 +135,6 @@ describe('Componente Game', () => {
     userEvent.type(playerName, 'Toasty');
     userEvent.click(buttonPlay);
 
-
     await waitFor(() => {
       const correct = screen.getByTestId('correct-answer');
       expect(correct).toBeVisible();
@@ -149,7 +143,6 @@ describe('Componente Game', () => {
     await waitFor(() => {
       const correct = screen.getByTestId('correct-answer');
       expect(correct).not.toBeDisabled();
-
     });
 
     await waitFor(() => {
@@ -161,7 +154,7 @@ describe('Componente Game', () => {
   }, 40000);
 
   it('Verifica se é exibido Well Done ao acertar mais do que 3 perguntas', async () => {
-    localStorage.setItem('token', '504150afd88547f64f5c595c0e031215a4e1400cbbc6376670dba45711b4b9d7')
+    localStorage.setItem('token', '504150afd88547f64f5c595c0e031215a4e1400cbbc6376670dba45711b4b9d7');
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValue({
       json: jest.fn().mockResolvedValue(mockQuestion),
@@ -174,7 +167,6 @@ describe('Componente Game', () => {
     userEvent.type(emailInput, 'teste@teste.com');
     userEvent.type(playerName, 'Toasty');
     userEvent.click(buttonPlay);
-
 
     await waitFor(() => {
       const correct = screen.getByTestId('correct-answer');
@@ -233,7 +225,7 @@ describe('Componente Game', () => {
   });
 
   it('Verifica se é exibido Could be better ao acertar menos do que 3 perguntas', async () => {
-    localStorage.setItem('token', '504150afd88547f64f5c595c0e031215a4e1400cbbc6376670dba45711b4b9d7')
+    localStorage.setItem('token', '504150afd88547f64f5c595c0e031215a4e1400cbbc6376670dba45711b4b9d7');
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValue({
       json: jest.fn().mockResolvedValue(mockQuestion),
@@ -246,7 +238,6 @@ describe('Componente Game', () => {
     userEvent.type(emailInput, 'teste@teste.com');
     userEvent.type(playerName, 'Toasty');
     userEvent.click(buttonPlay);
-
 
     await waitFor(() => {
       const wrong = screen.getByRole('button', { name: /Genesis/i });
@@ -303,6 +294,4 @@ describe('Componente Game', () => {
       expect(couldBeBetter).toBeInTheDocument();
     }, 3000);
   });
-
-
 });

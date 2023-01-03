@@ -1,9 +1,9 @@
 <h2>Projeto Jogo de Trivia</h2>
 
-<img src="https://i.pinimg.com/originals/13/0a/ec/130aec120d0fad24a35245b5f6c9071a.gif" min-width="400px" max-width="400px" width="400px" align="right" alt="Garota sentada em cadeira enquanto realiza pesquisas no computador de mesa(desktop). Ela está de costas para a câmera.">
+<img src="https://github.com/thawane-oliveira/trivia/blob/main/trivia.gif?raw=true" min-width="600px" max-width="600px" width="600px" alt="Aplicação do jogo Trivia em funcionamento, iniciando com sua tela de login e em seguida as perguntas. No final de 5 perguntas, é exibida sua pontuação e é possível jogar novamente ou visualizar o ranking.">
 
 
-<p align="left"> 
+<p> 
  ☆ Projeto realizado em grupo com o intuito de produzir um jogo estilo trivia com perguntas diversas.
   
  ☆ O grupo foi composto por: Thawane Oliveira, Pietro Bergamaschi, Suelem Macedo e Antonio Neto.
